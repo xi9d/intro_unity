@@ -2,6 +2,19 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {   
 public float speed = 5.0f;
+private Rigidbody rb;
+private Vector3 startPosition;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        startPosition = transform.position;
+
+
+        rb.mass = 1f;
+        rb.linearDamping = 0.5f;
+        rb.useGravity = true;
+    }
     void Update()
     {
        /* float horizontal = Input.GetAxis("Horizontal");
@@ -16,10 +29,23 @@ public float speed = 5.0f;
         if(Input.GetKey(KeyCode.LeftShift))
        {
        
-      currentSpeed = speed * 2f;
+         currentSpeed = speed * 2f;
        
        }
-       // player can move with W
+
+       // Press R to reset position
+       if(Input.GetKey(KeyCode.R))
+       {
+        transform.position = startPosition;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+       }
+    
+    }
+    void FixedUpdate()
+    {
+        float currentSpeed = speed;
+        // player can move with W
        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
        {
        
@@ -48,8 +74,20 @@ public float speed = 5.0f;
        transform.Translate(Vector3.right * currentSpeed * Time.deltaTime);
        
        }
-       
-       
+
+       // space to jump
+       if (Input.GetKeyDown(KeyCode.Space)) 
+        { 
+            rb.AddForce(Vector3.up * 5f, ForceMode.Impulse); 
+        }
+    
     }
+    void ContinousMovement()
+    {
+        float move = Input.GetAxisRaw("Horizontal"); 
+   Vector3 force = new Vector3(move * 10f, 0, 0); 
+   rb.AddForce(force, ForceMode.Force);
+    }
+
 }
 
