@@ -4,6 +4,7 @@ public class PlayerMovement : MonoBehaviour
 public float speed = 5.0f;
 private Rigidbody rb;
 private Vector3 startPosition;
+private float currentSpeed;
 
     void Start()
     {
@@ -24,7 +25,7 @@ private Vector3 startPosition;
        transform.Translate(movement * speed * Time.deltaTime);*/
        
        
-       float currentSpeed = speed;
+       
        // player can move faster using leftshift
         if(Input.GetKey(KeyCode.LeftShift))
        {
@@ -44,7 +45,6 @@ private Vector3 startPosition;
     }
     void FixedUpdate()
     {
-        float currentSpeed = speed;
         // player can move with W
        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
        {
@@ -87,6 +87,16 @@ private Vector3 startPosition;
         float move = Input.GetAxisRaw("Horizontal"); 
    Vector3 force = new Vector3(move * 10f, 0, 0); 
    rb.AddForce(force, ForceMode.Force);
+    }
+
+    // colliders
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Game Over");
+            Destroy(gameObject);
+        }
     }
 
 }
