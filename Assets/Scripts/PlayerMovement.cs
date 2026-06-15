@@ -2,22 +2,24 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {   
 public float speed = 5.0f;
+public float currentSpeed; 
 private Rigidbody rb;
 private Vector3 startPosition;
-private Quaternion startRotation;
-private float currentSpeed;
+private Quaternion  startRotation;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.mass = 4f;
+        rb.linearDumping = 0.5f;
+        rb.useGravity = true;
+
+
+        // gameobject origin
         startPosition = transform.position;
         startRotation = transform.rotation;
-
-
-        rb.mass = 1f;
-        rb.linearDamping = 0.5f;
-        rb.useGravity = true;
     }
+
     void Update()
     {
        /* float horizontal = Input.GetAxis("Horizontal");
@@ -27,29 +29,34 @@ private float currentSpeed;
        transform.Translate(movement * speed * Time.deltaTime);*/
        
        
-       
+    
        // player can move faster using leftshift
         if(Input.GetKey(KeyCode.LeftShift))
        {
        
-         currentSpeed = speed * 2f;
+      currentSpeed = speed * 2f;
        
        }
 
-       // Press R to reset position
+       // reset player position
        if(Input.GetKey(KeyCode.R))
        {
         transform.position = startPosition;
-        transform.rotation = Quaternion.identity;
+        transform.rotation = startRotation;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
        }
-    
+      // add rigid body to the projectiles(cube), make sure when player collides with the projectiles, they get knocked off 
+       
+       
     }
     void FixedUpdate()
     {
+
         currentSpeed = speed;
-        // player can move with W
+        // movement 
+         // player can move with W
        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
        {
        
@@ -79,29 +86,14 @@ private float currentSpeed;
        
        }
 
-       // space to jump
-       if (Input.GetKeyDown(KeyCode.Space)) 
-        { 
-            rb.AddForce(Vector3.up * 5f, ForceMode.Impulse); 
-        }
-    
-    }
-    void ContinousMovement()
-    {
-        float move = Input.GetAxisRaw("Horizontal"); 
-   Vector3 force = new Vector3(move * 10f, 0, 0); 
-   rb.AddForce(force, ForceMode.Force);
+       // player can jump with space
+       if(Input.GetKey(KeyCode.Space))
+       {
+
+        rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
+       }
     }
 
-    // colliders
-    void OnCollissionEnter(Collision collision)
-    {
-        if(collision.gameObject.CompareTag("Enemy"))
-        {
-            Debug.Log("Game Over");
-            Destroy(gameObject);
-        }
-    }
+
 
 }
-
