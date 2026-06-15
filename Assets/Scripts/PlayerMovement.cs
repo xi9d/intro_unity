@@ -4,12 +4,14 @@ public class PlayerMovement : MonoBehaviour
 public float speed = 5.0f;
 private Rigidbody rb;
 private Vector3 startPosition;
+private Quaternion startRotation;
 private float currentSpeed;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         startPosition = transform.position;
+        startRotation = transform.rotation;
 
 
         rb.mass = 1f;
@@ -38,6 +40,7 @@ private float currentSpeed;
        if(Input.GetKey(KeyCode.R))
        {
         transform.position = startPosition;
+        transform.rotation = Quaternion.identity;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
        }
@@ -45,6 +48,7 @@ private float currentSpeed;
     }
     void FixedUpdate()
     {
+        currentSpeed = speed;
         // player can move with W
        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
        {
@@ -90,7 +94,7 @@ private float currentSpeed;
     }
 
     // colliders
-    void OnCollisionEnter(Collision collision)
+    void OnCollissionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
