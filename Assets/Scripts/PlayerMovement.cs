@@ -11,7 +11,7 @@ private Quaternion  startRotation;
     {
         rb = GetComponent<Rigidbody>();
         rb.mass = 4f;
-        rb.linearDumping = 0.5f;
+        //rb.linearDumping = 0.5f;
         rb.useGravity = true;
 
 
