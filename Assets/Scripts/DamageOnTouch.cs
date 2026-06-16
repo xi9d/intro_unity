@@ -2,20 +2,40 @@ using UnityEngine;
 
 public class DamageOnTouch : MonoBehaviour
 {
+    
     void OnCollisionEnter(Collision collision)
     {
-        // Check if the colliding object has the "Player" tag
-        if (collision.gameObject.CompareTag("Player"))
+        // check if enemy collided with player
+        if(collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player hit!");
+            Debug.Log("Hit player!");
 
-            // Optional: log collision details
+            // collision details
             Debug.Log("Impact force: " + collision.relativeVelocity.magnitude);
             ContactPoint contact = collision.GetContact(0);
-            Debug.Log("Hit point: " + contact.point);
+            Debug.Log("Hit Point: " + contact.point);
 
-            // Destroy the player object
-            Destroy(collision.gameObject);
+            // destroy enemy on contact
+            Destroy(gameObject);
+        }
+    }
+
+
+    // onCollisionStay is called every frame while the collision continues
+    void OnCollisionStay(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Player is still touching...");
+        }
+    }
+
+    // onCollisionExit is called ONCE when collision end (object separate)
+    void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Player left contact . (Exit)");
         }
     }
 }
