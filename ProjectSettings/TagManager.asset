@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - speedboost
+  - SpeedZone
+  - HealZone
+  - JumpZone
+  - DeathZone
   layers:
   - Default
   - TransparentFX
