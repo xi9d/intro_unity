@@ -4,18 +4,19 @@ public class Spawner : MonoBehaviour
 {
     public GameObject projectile;
     
-    
-    
-    void Update()
+    public int enemyCount = 2;
+    public Vector3 spawnAreaSize = new Vector3(10, 0, 10);
+
+    void Start()
     {
-         //press G to spawn a projectile
-        //  if(Input.GetKey(KeyCode.G)){
-            Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), Random.Range(-3f, 3f), Random.Range(-4f, 4f));
-            GameObject obj = Instantiate(projectile, randomPos, Quaternion.identity);
-            
-            Destroy(obj,2f);
-            // }
-          
-          
+        for (int i = 0; i < enemyCount; i++)
+        {
+            Vector3 randomPos = new Vector3(
+                Random.Range(-spawnAreaSize.x/2, spawnAreaSize.x/2),
+                0,
+                Random.Range(-spawnAreaSize.z/2, spawnAreaSize.z/2)
+            ) + transform.position;
+            Instantiate(projectile, randomPos, Quaternion.identity);
+        }
     }
 }
