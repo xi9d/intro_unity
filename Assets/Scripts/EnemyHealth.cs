@@ -8,12 +8,11 @@ public class EnemyHealth : MonoBehaviour
     {
         health -= damage;
         Debug.Log($"Took Damage new health:{health}");
-        // if (health <= 0)
-        // {
-        //     // Add score if you have ScoreManager
-        //     if (ScoreManager.Instance != null)
-        //         ScoreManager.Instance.AddScore(10);
-        //     Destroy(gameObject);
-        // }
+        if (health <= 0)
+        {
+           // Add score if you have ScoreManager
+           
+             Destroy(gameObject);
+        }
     }
 }

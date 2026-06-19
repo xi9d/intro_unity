@@ -67,13 +67,8 @@ private Quaternion  startRotation;
 
        }
       // add rigid body to the projectiles(cube), make sure when player collides with the projectiles, they get knocked off 
-       
-
-       // shoot projectiles when clicking left mouse button
-       if (Input.GetButtonDown("Fire1")) // left mouse
-        {
-            Shoot();
-        }
+        
+    
     }
     void FixedUpdate()
     {
@@ -117,6 +112,26 @@ private Quaternion  startRotation;
         rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
        }
     }
+        void LateUpdate() // or Update - rotation after movement
+    {
+        // ---- Rotate towards mouse ----
+        RotateTowardsMouse();
+
+        // ---- Shooting ----
+        if (Input.GetButtonDown("Fire1")) 
+        {
+            Shoot();
+        }
+
+        // ---- Reset position ----
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            transform.position = startPosition;
+            transform.rotation = startRotation;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+    }
 
     // speed boost
     public void ApplySpeedBoost(float multiplier, float duration)
@@ -131,23 +146,49 @@ private Quaternion  startRotation;
         currentSpeed = originalSpeed;
         Debug.Log($"Speed restored:{currentSpeed}");
     }
-
-    // health boost
-    public void Heal(int amount)
-    {
-        int oldHealth = currentHealth;
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-        int actualHealth = currentHealth - oldHealth;
-        Debug.Log($"Health restored to: {actualHealth}");
-    }
+  
     // shoot bulletrs
-    public void Shoot()
+  public void Shoot()
+{
+    if (bulletPrefab == null)
     {
-        if (bulletPrefab == null || bulletSpawnPoint == null) return;
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        Bullet bulletScript = bullet.GetComponent<Bullet>();
-        if (bulletScript != null)
-            bulletScript.SetDirection(bulletSpawnPoint.forward * bulletSpeed);
+        Debug.LogError("Bullet prefab is not assigned in the Inspector!");
+        return;
+    }
+    if (bulletSpawnPoint == null)
+    {
+        Debug.LogError("Bullet spawn point is not assigned in the Inspector!");
+        return;
+    }
+
+    GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+
+    // Use TryGetComponent (lesson best practice)
+    if (bullet.TryGetComponent<Bullet>(out Bullet bulletScript))
+    {
+        Vector3 direction = bulletSpawnPoint.forward * bulletSpeed;
+        bulletScript.SetDirection(direction);
+        Debug.Log($"Bullet spawned! Direction: {direction}");
+    }
+    else
+    {
+        Debug.LogError("The bullet prefab is missing the Bullet component!");
+    }
+}
+    
+   void RotateTowardsMouse()
+    {
+        Plane playerPlane = new Plane(Vector3.up, transform.position);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        float hitDist;
+        if (playerPlane.Raycast(ray, out hitDist))
+        {
+            Vector3 targetPoint = ray.GetPoint(hitDist);
+            Vector3 direction = targetPoint - transform.position;
+            direction.y = 0;
+            if (direction != Vector3.zero)
+                transform.rotation = Quaternion.LookRotation(direction);
+        }
     }
 
 

@@ -11,6 +11,7 @@ TagManager:
   - HealZone
   - JumpZone
   - DeathZone
+  - Bullets
   layers:
   - Default
   - TransparentFX

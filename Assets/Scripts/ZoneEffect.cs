@@ -36,13 +36,14 @@ public class ZoneEffect : MonoBehaviour
 
 
         // create instance of player movement to boost speed, health
-        PlayerMovement player = other.GetComponent<PlayerMovement>();
+        PlayerMovement player = other?.GetComponent<PlayerMovement>();
+        PlayerHealth playerHealth = other?.GetComponent<PlayerHealth>();
         if(zoneTag == "SpeedZone" && player != null)
         {
             player.ApplySpeedBoost(2f, 3f);
         }else if(zoneTag == "HealZone")
         {
-            player.Heal(1);
+            playerHealth.Heal(1);
         }
     }
     void OnTriggerStay(Collider other)
